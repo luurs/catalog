@@ -28,9 +28,13 @@ public class Good {
     @Column(name = "price")
     private BigDecimal price;
 
-    public Good(String name, String description, BigDecimal price) {
+    @Column(name = "external_id")
+    private String externalId;
+
+    public Good(String name, String description, BigDecimal price, String externalId) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.externalId = externalId;
     }
 }

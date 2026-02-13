@@ -10,7 +10,8 @@ public record GetGoodsListResponse(
       Long id,
       String name,
       String description,
-      BigDecimal price
+      BigDecimal price,
+      String externalId
     ) {
     }
 }

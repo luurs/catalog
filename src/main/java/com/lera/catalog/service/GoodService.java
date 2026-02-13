@@ -21,10 +21,19 @@ public class GoodService {
     }
 
     @Transactional
-    public Good add(String name, String description, BigDecimal price) {
-        var savedGood = new Good(name, description, price);
-        goodRepository.save(savedGood);
-        return savedGood;
+    public Good add(String name, String description, BigDecimal price, String externalId) {
+        var findGood = goodRepository.findByExternalId(externalId);
+        if (findGood.isPresent()) {
+            var good = findGood.get();
+            good.setName(name);
+            good.setDescription(description);
+            good.setPrice(price);
+            return good;
+        } else {
+            var savedGood = new Good(name, description, price, externalId);
+            goodRepository.save(savedGood);
+            return savedGood;
+        }
     }
 
     public List<Good> findById(List<Long> ids) {

@@ -22,8 +22,8 @@ public class GoodController {
     public final GoodMapper goodMapper;
 
     @PostMapping("/createGood")
-    public CreateGoodResponse addGood(@RequestBody CreateGoodRequest createGoodRequest) {
-        var addedGood = goodService.add(createGoodRequest.name(), createGoodRequest.description(), createGoodRequest.price());
+    public CreateGoodResponse addGood(@RequestBody CreateGoodRequest request) {
+        var addedGood = goodService.add(request.name(), request.description(), request.price(), request.externalId());
         return new CreateGoodResponse(addedGood.getId());
     }
 
