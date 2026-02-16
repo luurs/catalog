@@ -22,4 +22,7 @@ public class GoodTestModel {
 
     @Column(name = "price")
     private BigDecimal price;
+
+    @Column(name = "external_id")
+    private String externalId;
 }

@@ -20,7 +20,8 @@ public class GoodMapper {
                 good.getId(),
                 good.getName(),
                 good.getDescription(),
-                good.getPrice()
+                good.getPrice(),
+                good.getExternalId()
         );
     }
 }

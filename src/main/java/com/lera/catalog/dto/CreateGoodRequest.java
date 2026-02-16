@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public record CreateGoodRequest(
         String name,
         String description,
-        BigDecimal price
+        BigDecimal price,
+        String externalId
 ) {
 }
