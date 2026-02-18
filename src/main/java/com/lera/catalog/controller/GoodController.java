@@ -28,8 +28,8 @@ public class GoodController {
     }
 
     @PostMapping("/getGoodsList")
-    public GetGoodsListResponse getGoodsList(@RequestBody GetGoodsListRequest getGoodsListRequest) {
-        var goods = goodService.findById(getGoodsListRequest.ids());
+    public GetGoodsListResponse getGoodsList(@RequestBody GetGoodsListRequest request) {
+        var goods = goodService.findByExternalId(request.externalIds());
         return goodMapper.toGoodDtoList(goods);
     }
 }

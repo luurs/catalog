@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +37,7 @@ public class GoodService {
         }
     }
 
-    public List<Good> findById(List<Long> ids) {
-        return goodRepository.findAllById(ids);
+    public List<Good> findByExternalId(List<String> externalIds) {
+        return goodRepository.findByExternalIdIn(externalIds);
     }
 }

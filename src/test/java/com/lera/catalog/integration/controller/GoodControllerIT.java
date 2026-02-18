@@ -50,7 +50,7 @@ public class GoodControllerIT extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("Проверка возврата списка товаров по списку ids")
+    @DisplayName("Проверка возврата списка товаров по списку externalIds")
     public void getGoodsListTest() {
         //given
         jdbcTemplate.execute("insert into good (name, description, price, external_id) values ('pizza', 'tasty pizza', 100, 'P123ZA');");
@@ -61,7 +61,7 @@ public class GoodControllerIT extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(
                         new GetGoodsListRequest(
-                                List.of(1L, 2L)
+                                List.of("P123ZA", "A33LE")
                         )
                 )
                 .when()
