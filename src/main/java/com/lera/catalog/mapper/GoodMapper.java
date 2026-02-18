@@ -1,7 +1,7 @@
 package com.lera.catalog.mapper;
 
 import com.lera.catalog.dto.GetGoodsListResponse;
-import com.lera.catalog.model.Good;
+import com.lera.catalog.model.GoodEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,19 +9,19 @@ import java.util.List;
 @Component
 public class GoodMapper {
 
-    public GetGoodsListResponse toGoodDtoList(List<Good> goods) {
+    public GetGoodsListResponse toGoodDtoList(List<GoodEntity> goodEntities) {
         return new GetGoodsListResponse(
-                goods.stream().map(this::toGoodDto).toList()
+                goodEntities.stream().map(this::toGoodDto).toList()
         );
     }
 
-    public GetGoodsListResponse.GoodDto toGoodDto(Good good) {
+    public GetGoodsListResponse.GoodDto toGoodDto(GoodEntity goodEntity) {
         return new GetGoodsListResponse.GoodDto(
-                good.getId(),
-                good.getName(),
-                good.getDescription(),
-                good.getPrice(),
-                good.getExternalId()
+                goodEntity.getId(),
+                goodEntity.getName(),
+                goodEntity.getDescription(),
+                goodEntity.getPrice(),
+                goodEntity.getExternalId()
         );
     }
 }

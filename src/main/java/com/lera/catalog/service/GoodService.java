@@ -1,13 +1,12 @@
 package com.lera.catalog.service;
 
-import com.lera.catalog.model.Good;
+import com.lera.catalog.model.GoodEntity;
 import com.lera.catalog.repository.GoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +21,7 @@ public class GoodService {
     }
 
     @Transactional
-    public Good add(String name, String description, BigDecimal price, String externalId) {
+    public GoodEntity add(String name, String description, BigDecimal price, String externalId) {
         var findGood = goodRepository.findByExternalId(externalId);
         if (findGood.isPresent()) {
             var good = findGood.get();
@@ -31,13 +30,13 @@ public class GoodService {
             good.setPrice(price);
             return good;
         } else {
-            var savedGood = new Good(name, description, price, externalId);
+            var savedGood = new GoodEntity(name, description, price, externalId);
             goodRepository.save(savedGood);
             return savedGood;
         }
     }
 
-    public List<Good> findByExternalId(List<String> externalIds) {
+    public List<GoodEntity> findByExternalId(List<String> externalIds) {
         return goodRepository.findByExternalIdIn(externalIds);
     }
 }

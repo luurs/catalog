@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Good {
+public class GoodEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class Good {
     @Column(name = "external_id")
     private String externalId;
 
-    public Good(String name, String description, BigDecimal price, String externalId) {
+    public GoodEntity(String name, String description, BigDecimal price, String externalId) {
         this.name = name;
         this.description = description;
         this.price = price;
