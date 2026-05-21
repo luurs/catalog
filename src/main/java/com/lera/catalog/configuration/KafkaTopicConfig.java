@@ -9,7 +9,7 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicConfig {
 
-    @Value("${catalog.kafka.topics.invalidate-goods-cache}")
+    @Value("${spring.kafka.topics.invalidate-goods-cache}")
     private String invalidateGoodsCacheTopic;
 
     @Bean

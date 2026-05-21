@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class KafkaProducerService {
 
     private final KafkaTemplate<String, GoodsInvalidateMessage> kafkaTemplate;
-    @Value("${catalog.kafka.topics.invalidate-goods-cache}")
+    @Value("${spring.kafka.topics.invalidate-goods-cache}")
     private String invalidateGoodsCacheTopic;
 
     public void sendInvalidateMessage(GoodsInvalidateMessage message) {
@@ -25,5 +25,6 @@ public class KafkaProducerService {
                         log.debug("Goods invalidation sent, offset = {}", result.getRecordMetadata().offset());
                     }
                 });
+        kafkaTemplate.flush();
     }
 }
