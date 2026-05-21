@@ -13,5 +13,14 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
+  kafka:
+    topics:
+      invalidate-goods-cache: catalog.invalidate-gooda-cache
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.support.serialization.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
 server:
   port: 8080
