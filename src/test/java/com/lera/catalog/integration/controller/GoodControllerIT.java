@@ -6,12 +6,20 @@ import com.lera.catalog.dto.GetGoodsListResponse;
 import com.lera.catalog.integration.BaseIntegrationTest;
 import com.lera.catalog.model.GoodTestModel;
 import io.restassured.http.ContentType;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.DataClassRowMapper;
 
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -20,7 +28,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class GoodControllerIT extends BaseIntegrationTest {
 
     @Test
-    @DisplayName("Проверка создания товара")
+    @DisplayName("Проверка создания товара + запись в кафку")
     public void createGoodTest() {
         //when
         given()
@@ -39,6 +47,18 @@ public class GoodControllerIT extends BaseIntegrationTest {
                 .statusCode(200)
                 .body("id", equalTo(1));
 
+
+        //then
+        try (KafkaConsumer<String, String> consumer = createTestConsumer()) {
+            consumer.subscribe(List.of("catalog.invalidate-goods-cache"));
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
+            assertThat(records.count()).isEqualTo(1);
+
+            String messageJson = records.iterator().next().value();
+            assertThat(messageJson).contains("\"id\":1");
+            assertThat(messageJson).contains("\"externalId\":\"P123ZA\"");
+        }
+
         //then
         var good = jdbcTemplate.query("select * from good", new DataClassRowMapper<>(GoodTestModel.class)).getFirst();
 
@@ -47,6 +67,16 @@ public class GoodControllerIT extends BaseIntegrationTest {
         assertThat(good.getDescription()).isEqualTo("tasty pizza");
         assertThat(good.getPrice()).isEqualTo(new BigDecimal("100.00"));
         assertThat(good.getExternalId()).isEqualTo("P123ZA");
+    }
+
+    private KafkaConsumer<String, String> createTestConsumer() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_CONTAINER.getBootstrapServers());
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "test-group-" + UUID.randomUUID());
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        return new KafkaConsumer<>(props);
     }
 
     @Test
